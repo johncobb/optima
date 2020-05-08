@@ -1,0 +1,9 @@
+.vscode/*
+
+*.code-workspace
+
+*.pyc
+*.pyo
+env
+vin_dataset_master
+btree/vin_dataset_master
