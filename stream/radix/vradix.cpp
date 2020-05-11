@@ -113,6 +113,15 @@ uint64_t vraddec(uint64_t vrad, int base, int len) {
     return vrad;
 }
 
+void file_open(fstream* fio, string path) {
+    (*fio).open(path);
+    (*fio).seekg(0, ios::beg);
+}
+
+void file_close(fstream* fio) {
+    (*fio).close();
+}
+
 /* base 10 encodes sequence of numbers 0...9 */
 void run_example_encdec_base10() {
     int base = 10;
@@ -286,6 +295,8 @@ void run_example_checksum(string data) {
     cout << "checksum: " << (valid(data) ? "true" : "false") << endl;
 }
 
+
+
 void run_file() {
     fstream fio;
     string line;
@@ -295,6 +306,8 @@ void run_file() {
     cout << "start of file" << endl;
     uint32_t counter = 0;
     size_t len = 0;
+
+
 
     while(fio) {
         counter++;
@@ -339,6 +352,37 @@ void run_file() {
     cout << "end of file." << endl;
 }
 
+
+
+void run_file_open_example() {
+
+    fstream fio;
+    string line;
+    uint32_t counter = 0;
+    size_t len = 0;
+    int base = 33;
+    
+    file_open(&fio, "../../datasets/wmi_output");
+
+    while(fio) {
+        counter++;
+
+        getline(fio, line);
+        len = line.length();
+
+        if (len > 0) {
+            string data_x;
+            string buffer_x = line.substr(0,3);
+            vmapencode(buffer_x, &data_x);
+            uint16_t vrad_wmi = vradenc(data_x, base);
+              
+        }
+        // cout << "line: " << line << " len: " << len << endl;   
+    }
+
+    file_close(&fio);
+}
+
 void run_example_substr(string data) {
     cout << "sub[0,3]:" << data.substr(0,3) << endl;
     cout << "sub[3,5]:" << data.substr(3,5) << endl;
@@ -346,6 +390,8 @@ void run_example_substr(string data) {
 }
 
 int main() {
+    run_file_open_example();
+    return 0;
     // run_example_checksum("JTHKD5BH0D2170008");
     // run_example_map();
     // run_example_exp();

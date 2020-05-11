@@ -75,9 +75,11 @@ python3 build_dataset.py archives/vin_dataset_master > output
 """
 
 def build_wmi(list):
+    index_vin = 0
+
     wmi = []
     for x in list:
-        wmi.append(x[0][0:3])
+        wmi.append(x[index_vin][0:3])
         # wmi.append([x[0][0:3], x[1]])
 
     return wmi
