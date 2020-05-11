@@ -24,10 +24,16 @@ def pandas_build(file1, filter=None):
 
     
     #export_frame(frame_one, filter)
-    filter_frame(frame_one, filter)
+    results = filter_frame(frame_one, filter)
+
+    return results
+
+    
     
 
 def filter_frame(frame_one, filter=None):
+
+    records = []
 
     index_vin = 1
     index_make = 2
@@ -41,24 +47,40 @@ def filter_frame(frame_one, filter=None):
             vin_result = ValidateVIN(vin)
             if vin_result[0]:
                 if filter is None:
-                    print(vin)
+                    # print(vin)
+                    records.append([vin, make])
                 else:
                     if wmi in filter:
-                        print(vin)
+                        # print(vin)
+                        records.append([vin, make])
         except csv.Error as e:
             print(e)
+
+    return records
+
 
 # cat vinValidation.txt | grep False > invalidVins.txt
 # cat vinValidation.txt | grep True > validVins.txt
 # python ml.py > vinValidation.txt
 
 """
-running: 
-activate virtual environment
+decompress dataset:
+gzip -dk vin_dataset_master
+
+activate virtual environment:
 . /env/bin/activate
 
-python3 build_dataset.py vin_dataset_master > output
+running:
+python3 build_dataset.py archives/vin_dataset_master > output
 """
+
+def build_wmi(list):
+    wmi = []
+    for x in list:
+        wmi.append(x[0][0:3])
+        # wmi.append([x[0][0:3], x[1]])
+
+    return wmi
 
 
 if __name__ == "__main__":
@@ -72,7 +94,13 @@ if __name__ == "__main__":
                   '1T8', 'JTB', 'JTN', 'JT6', 'JYJ', '2TZ', 'JT1', 
                   '2TS', '1TJ']
 
-    pandas_build(file, wmi_filter)
+    results = pandas_build(file, wmi_filter)
+
+    # build wmi limiting to unique/distinct values
+    keys = list(set(build_wmi(results)))
+
+    for x in keys:
+        print(x)    
 
 
 
