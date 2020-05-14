@@ -42,8 +42,6 @@ void vmapdecode(string data) {
     }
 }
 
-uint64_t vradenc(string data, int base);
-uint64_t vraddec(uint64_t vrad, int base, int len);
 
 
 /* http://eecs.wsu.edu/~ee314/handouts/numsys.pdf */
@@ -59,11 +57,13 @@ uint64_t vradenc(string data, int base) {
 
     for (int i=0; i<data.length(); i++) {
 
+
         exp = (data.length()-1) - i;
 
         /* get the index of the character at i(th) position */
         int mval = data[i];
         char mvalc = vmapcharat(mval);
+
 
         vrad += (mval * pow(base, exp)); // replace: bitshif
 
@@ -71,7 +71,6 @@ uint64_t vradenc(string data, int base) {
         cout << "[" << mval << "]";     
         cout << "[" << mvalc << "]";   
         cout << base << "^" << exp << "=" << vrad << endl;
-
     }
 
     return vrad;
@@ -86,7 +85,6 @@ uint64_t vraddec(uint64_t vrad, int base, int len) {
         uint64_t vdelta = 0;
 
         exp = (len-1) -i;
-
 
         uint64_t vradp = pow(base, exp);
         uint64_t vmod = vrad % vradp; // replace: bitshif
@@ -143,7 +141,6 @@ void run_example_encdec_base33(string buffer) {
     cout << "enc result: " << vrad << endl;
     vraddec(vrad, base, buffer.length());
 }
-
 
 void run_example_vradenc() {
 
@@ -235,67 +232,9 @@ void run_example_map() {
     cout << "dict[2]: " << dict.at(2) << endl;
 }
 
-bool valid(string data)  {
-    cout << "not implemented." << endl;
-    return false;
-    // map<char, int> dict;
-    // dict['A'] = 1;
-    // dict['B'] = 2;
-    // dict['C'] = 3;
-    // dict['D'] = 4;
-    // dict['E'] = 5;
-    // dict['F'] = 6;
-    // dict['G'] = 7;
-    // dict['H'] = 8;
-
-    // dict['J'] = 1;
-    // dict['K'] = 2;
-    // dict['L'] = 3;
-    // dict['M'] = 4;
-    // dict['N'] = 5;
-    // dict['P'] = 7;
-    // dict['R'] = 9;
-
-    // dict['S'] = 2;
-    // dict['T'] = 3;
-    // dict['U'] = 4;
-    // dict['V'] = 5;
-    // dict['W'] = 6;
-    // dict['X'] = 7;
-    // dict['Y'] = 8;    
-    // dict['Z'] = 9;
-  
-    
-    // int weight[17] = {8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2};
-    // int sum = 0;
-    // for (int i=0; i<data.length(); i++) {
-    //     int val = decc(data[i]);
-    //     sum = sum + weight[i] * val;
-    // }
-
-    // sum = sum % 11;
-    // char check = data.at(8);
-    // cout << "check: " << check;
-    // cout << " decc(check): " << decc(check);
-    // cout << " sum: " << sum;
-    // cout << endl;
-
-    // if (decc(check) < 10)
-    //     return sum == decc(check);
-    // if (sum == 10 && check == 'X')
-    //     return true;
-    // else if (sum == dict.at(check))
-    //     return true;
-    // else
-    //     return false;
-
-}
-
-void run_example_checksum(string data) {
-    cout << "checksum: " << (valid(data) ? "true" : "false") << endl;
-}
-
-
+// void run_example_checksum(string data) {
+//     cout << "checksum: " << (valid(data) ? "true" : "false") << endl;
+// }
 
 void run_file() {
     fstream fio;
@@ -306,8 +245,6 @@ void run_file() {
     cout << "start of file" << endl;
     uint32_t counter = 0;
     size_t len = 0;
-
-
 
     while(fio) {
         counter++;
@@ -349,7 +286,7 @@ void run_file() {
 
 
     fio.close();
-    cout << "end of file." << endl;
+    cout << "end of the line." << endl;
 }
 
 
@@ -375,6 +312,9 @@ void run_file_open_example() {
             string buffer_x = line.substr(0,3);
             vmapencode(buffer_x, &data_x);
             uint16_t vrad_wmi = vradenc(data_x, base);
+
+            cout << "vwmi: 0x" << vrad_wmi << endl;
+
               
         }
         // cout << "line: " << line << " len: " << len << endl;   
@@ -391,7 +331,7 @@ void run_example_substr(string data) {
 
 int main() {
     run_file_open_example();
-    return 0;
+    // return 0;
     // run_example_checksum("JTHKD5BH0D2170008");
     // run_example_map();
     // run_example_exp();
@@ -401,8 +341,9 @@ int main() {
     // run_example_encdec_base33("JTH");
     // run_example_substr("JTHKD5BH0D2170008");
     // run_example_vencode();
-    run_file();
+    // run_file();
 
+    return 0;
 
 
 }

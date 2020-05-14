@@ -102,7 +102,7 @@ if __name__ == "__main__":
     keys = list(set(build_wmi(results)))
 
     for x in keys:
-        print(x)    
+        print(x, ' Lexus')    
 
 
 

@@ -1,100 +1,98 @@
-# Encoding workflow tasks/sub-taks with 16/32/64 bit integers
 
-The goal of this project is to experiment with bit encoding tasks and relating sub-tasks which represent predefined data flows within a workflow system. Optimizing the data structure allows for more efficient transmission and processing of tasks. 
+# Optimizing JSON stream for web and mobile endpoints.
+ * sets - defines datasets included in meta/frame/dict
+ * meta - descriptor defining fuzzy lookup for use with omni suggest/search functionality 
+ * frame - omni search initial load/query results hosting datasets
+ * dict - data dictionary hosting dataset index and field order used to assemble query results
 
-The example we will use in this project is tracking food preparation steps.
+Metrics:
+```console
+stream-legacy: 199,774 bytes
+stream-opt 35,250 bytes 
 
-Example: Task 1/Spaghetti
-1: Boil Noodles
-2: Cook Meat
-3: Add Sauce
-4: Serve
-
-Example: Task 2/Pancakes
-1: Pour Mix
-2: Add Eggs
-3: Add Milk
-4: Mix Thoroughly
-5: Cook to golden brown
-6: Serve
-
-Now let's aassume we were tasked to create a system for managing  chefs in a restaurant. The restaurant manager would like to send the tasks to each chef and monitor the progress as each step of the preparatin process is completed. Simple you say, yeah, I agree, a few tables in a database and we have the start of a  workflow tracking system.
-
-## Conventional Wisdom
-Conventional wisdom says create relational tables to represent the flow.
-```
-Table: Tasks
-Id INT
-Name CHAR(20)
-
-Table: SubTasks
-SubTaskId
-TaskId
-CHAR(20)
-
-Table: TaskWorkflow:
-Id INT
-TaskId INT
-CurrentSubTaskStep INT
-ChefId INT
-Timestamp DATETIME
+// 200 records achieved 5.5x reduction in size
 ```
 
-We now have the tables needed to identify all the tasks and their relating sub-tasks. We also have a table to track the workflow as each chef is assigned tasks and begins working through each subtask/step to completion. This is great but as you can see the data starts to add up over time. What's more is the level of joining and lookups required to track each task as well as calculate the timing of each task can get pretty resource intensive. In a system where there is a lot of transaction volume the overhead starts to accumulate quickly. Indexing this system while not imposssible is a balance of designing for query speed and write performance. A somewhat paradoxical initiative in that one tends to mute out the other.
+Model:
+ * sets[[set-id, name]]
+ * meta[dataset-id, [meta-name, [field-id, ...], ['field-value', '...']]]
+ * frame[dataset-id, [field-value, ...]]
+ * dict[dataset-id, meta-name, [field-name, ...]]
+
+Notes: 
+ * VIN and stock are distinct listings of the current inventory. Stock meta is only populated if the dealership uses something other than the last 6/8 characters of the VIN.
+ * Stock meta would be empty if the dealership uses last 6/8 or leaves the stock field blank.
+ * Stock meta is only populated with entries where the stock differs from last 6/8 characters of the VIN.
+
+## Levenshtein Algorithm 
+Also known as fuzzy matching, is populated with meta and provides omni with suggestions.
+Precedence is defined by the order of items in the sets.
+
+Use Case:
+* User types 'Porsch' in omni-search field
+* Algorithm returns make-id of 1 conf of 98% and auth-id of 'porscia-evans' conf of 90%
+* omni-search suggests Porsche followed by vinpoint user 'porscia-evans'
+* User dispatches request by selecting/auto-completing/etc Porsche suggestion
+* Node dispatches query to api /vinpoint-api/v1/or/version/agnostic/utopia/?
+* SQL dispatches query SELECT OrgId, DealershipId, MakeId, ModelId, CreatedEpoch, ... FROM ONE_TABLE_NO_JOINS
+* API returns data in framed format including meta/frame/dict.
+* javascript assembles framed data using dict to map fields to appropriate field elements in browser.
+
+## SQL Data Model
+### Table - vrad
+Table vrad stores radix encoding of vehicle identification number. Optimizing storage of vin in a multi-column composite index for faster lookups.
+Traditional querys on varchar fields require costly full table scans. We should see several orders of magnitued improvement on performance. 
+
+| field  | data-type | size |
+| ------ | --------- | ----:|
+| inventory-id | uint32_t | 4 |
+| vrad-wmi | uint16_t  | 2 |
+| vrad-vds | uint32_t | 4 |
+| vrad-ser | uint64_t | 8 |
+
+#### Index
+CREATE INDEX vrad_wmi_vds_ser_index ON vrad (vrad-wmi, vrad-vds, vrad-ser);
 
 
-## Less is More
-The tasking system I am proposing is optimied by both identifying the task and managing its sub-task state in as little as a two byte integer called a short. The 8 high order bits represent the task identifier and the 8 low order bits represent the relating sub-tasks or steps involved to complete the task. For our simple 2 byte tracking system this gives us a scope of 256 tasks containing up to 256 sub-tasks.
-
-Listed below is an example of a task with sub-task 1 active. The task id is calculate by masking out the 8 low order bits and dividing the 8 high order bits by 256. Doing so yields the task id.
-
-
-Mask the 8 low order bits:
-```
-    0000 0001 0000 0001
-AND
-    1111 1111 0000 0000
-EQUALS
-    0000 0001 0000 0000
-EQUALS
-    256
-EQUALS
-    256/256=1
-```
+#### Efficiency
+| performance | size/bytes |
+| ------ | ----:|
+| O(log_2(n)) | 14 |
 
 
-Example:
-Spaghetti:
-```
-0000 0001 0000 0000 = 256/256 = 1
-```
-Pancakes:
-```
-0000 0010 0000 0000 = 512/256 = 2
-```
-The same is done to the low order bits to calculate the sub-task id.
-
-## Performance/Optimization
-The novelty of this system is the deterministic nature of the high and low order bits. Shrinking the representation of 256 tasks/sub-tasks to 2 bytes. Transmitting this data over the wire is extremely efficient and the logic operations to calculate values require minimal computation. The integer optimization also allows for more efficient data storage and indexing in traditional RDBMS systems. Overall query and write performance is optimal.
-
-Tracking the workflow and describing each task can be done with two tables. A third journaling table could be added to track the transient states of each task.
-```
-Table TaskWorkflow:
-TaskId
-UserId
-Epoch
-```
-
-The tasks and subasks can be described in the same table due to the nature of the unique combination of bits representing the task/sub-task.
-```
-Table TaskMeta:
-Id
-Label
+Example radix base 10:
+```console
+843 = 8 x 10^2 + 4 x 10^1 + 3 x 10^0
 ```
 
 
-## Future
-The system can be expanded using the signed bit to determine whether a task is complete. If the task meta defines a max task value the task could be autocompleted or closed out by flipping the signed bit. This adds an intrinsic querying facility that can quickly query all tasks.
+### Example JSON Format
 
-## Exploratory
-32 and 64 bit variants allowing permission scope and possible lock-step/parallel task triggering.
+```json
+{
+    "data": {
+        "sets": [[0, "inv"], [1, "auth"]],
+        "meta": [
+            [0, ["org", [1, 2], [ "Cobb Porsche", "Cobb McLaren"]]],
+            [0, ["dealership", [100, 200], ["Cobb Porsche", "Cobb McLaren"]]],
+            [0, ["location", [1, 2], ["Lot 1", "Parking Garage"]]],
+            [0, ["make", [1, 2], ["Porsche", "McLaren"]]],
+            [0, ["model", [1, 2], ["911", "720 S"]]],
+            [0, ["color", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], ["White", "Silver", "Grey", "Black", "Yellow", "Orange", "Tan", "Brown", "Purple", "Red", "Blue", "Green"]]],
+            [0, ["class", [1, 2, 3, 4, 5], ["New", "Used", "Loaner", "Uber", "Lyft"]]],
+            [1, ["auth", [1, 2, 3], ["@porscia.evans", "@jane.smith", "@peter.parker"]]]            
+        ],
+        "frame": [         
+            [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "WP1AA2A50KLB01949", 2019, 1, 1, "KLB01949", 3, 2, 1, 32768011, -106374481, 5.7, 0, 325452232]],
+            [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "SBM14DCA8JW001553", 2018, 2, 2, "JW001553", 3, 2, 2, 28768011, -105352845, 5.2, 0, 325452185]]                                                                                                                                                               
+        ],
+        "dict": [
+            {
+                "id": 0,
+                "name": "inv",
+                "val": ["org-id", "dealer-id", "mileage", "created-epoch", "last-label-epoch", "inventory-id", "vin", "year", "make-id", "model-id", "stock", "color-id", "class-id", "location-id", "lat", "lng", "sig", "3pa", "scanned-epoch"]            
+            }         
+        ]
+    }
+}
+```
