@@ -22,3 +22,7 @@ g++ where to find the library with the -L parameter.
 ```console
 g++ main.cpp lib/vrad.cpp -I /lib -L . -o runme -lvrad
 ```
+
+
+#### References:
+https://www.cprogramming.com/tutorial/shared-libraries-linux-gcc.html

@@ -42,10 +42,6 @@ uint64_t vradenc(std::string data, int base) {
     uint64_t vrad = 0;
     uint64_t vradshxp = 0; /* used to track bitshift exponent */
     int exp = 0;
-
-
-    // vmapdecode(data);
-    // cout << " base: " << base << endl;
     
     for (int i=0; i<data.length(); i++) {
 
@@ -59,10 +55,6 @@ uint64_t vradenc(std::string data, int base) {
 
         vrad += (mval * pow(base, exp)); // replace: bitshif
 
-        // cout << "[" << i << "]";
-        // cout << "[" << mval << "]";     
-        // cout << "[" << mvalc << "]";   
-        // cout << base << "^" << exp << "=" << vrad << endl;
     }
 
     return vrad;
@@ -70,7 +62,6 @@ uint64_t vradenc(std::string data, int base) {
 
 uint64_t vraddec(uint64_t vrad, int base, int len) {
     int exp = 0;
-    // cout << "vraddec: " << vrad << endl;
     
     for (int i=0; i<len; i++) {
         int vmapi = 0;
@@ -80,24 +71,18 @@ uint64_t vraddec(uint64_t vrad, int base, int len) {
 
         uint64_t vradp = pow(base, exp);
         uint64_t vmod = vrad % vradp; // replace: bitshif
-
-        // cout << "[" << i << "]";
         
         if (vmod > 0) {
             vdelta = vrad - vmod;
             vmapi = vdelta/vradp;
-            // cout << "[" << vmapi << "]";
-            // cout << "[" << vmapcharat(vmapi) << "]";
+
             vrad = vmod;
         }
         else {
             vdelta = vrad;
             vmapi = vrad;
-            // cout << "[" << vmapi << "]";
-            // cout << "[" << vmapcharat(vmapi) << "]";
         }
-        // cout << base << "^" << exp << "=" << vdelta;
-        // cout << endl;
+
     }
 
     return vrad;

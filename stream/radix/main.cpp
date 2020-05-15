@@ -17,15 +17,6 @@ void file_open(fstream* fio, string path) {
 void file_close(fstream* fio) {
     (*fio).close();
 }
-
-
-    // int base = 33;
-    // string data;
-
-    // vmapencode(buffer, &data);
-    // uint64_t vrad = vradenc(data, base);
-    // cout << "enc result: " << vrad << endl;
-    // vraddec(vrad, base, buffer.length());
     
 void run_file_open_example() {
     cout << "run_file_open_example..." << endl;
@@ -59,8 +50,6 @@ void run_file_open_example() {
     file_close(&fio);
 }
 
-
-
 void run_simple() {
     int base = 33;
     std::string buffer = "JTH";
@@ -72,10 +61,38 @@ void run_simple() {
     cout << "mval: " << hex << mval << endl;
 }
 
+void run_example_vin() {
+ 
+    uint16_t rad_wmi;
+    uint32_t rad_vds;
+    uint64_t rad_ser;
+
+    int base = 33;
+    std::string buffer = "JTHKD5BH0D2170008";
+    std::string data_wmi;
+    std::string data_vds;
+    std::string data_ser;    
+
+    /* perform limited charset encoding */
+    vmapencode(buffer.substr(0,3), &data_wmi);
+    rad_wmi = vradenc(data_wmi, base);
+
+    vmapencode(buffer.substr(3,5), &data_vds);
+    rad_vds = vradenc(data_vds, base);      
+
+    vmapencode(buffer.substr(8,9), &data_ser);
+    rad_ser = vradenc(data_ser, base);      
+
+    cout << "wmi: " << hex << rad_wmi << endl; 
+    cout << "vds: " << hex << rad_vds << endl;
+    cout << "ser: " << hex << rad_ser << endl;  
+}
+
 int main() {
     // run_simple();
     cout << "running main..." << endl;
-    run_file_open_example();
+    // run_file_open_example();
+    run_example_vin();
     return 0;
 
 }
