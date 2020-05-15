@@ -4,14 +4,6 @@
 #include <map>
 #include <iostream>
 #include <string>
-#include "vrad.h"
-
-char encc(int code) {
-    return char(code + '0');
-}
-char decc(int code) {
-    return char(code - '0');
-}
 
 std::string vmap = "0123456789ABCDEFGHJKLMNPRSTUVWXYZ";
 
@@ -82,7 +74,6 @@ uint64_t vraddec(uint64_t vrad, int base, int len) {
             vdelta = vrad;
             vmapi = vrad;
         }
-
     }
 
     return vrad;
