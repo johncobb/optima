@@ -4,7 +4,8 @@
 #include <fstream>
 #include <string>
 
-#include "lib/vrad.h"
+// #include "lib/vrad.h"
+#include "lib/lib_vrad.h"
 
 using namespace std;
 
@@ -17,6 +18,15 @@ void file_close(fstream* fio) {
     (*fio).close();
 }
 
+
+    // int base = 33;
+    // string data;
+
+    // vmapencode(buffer, &data);
+    // uint64_t vrad = vradenc(data, base);
+    // cout << "enc result: " << vrad << endl;
+    // vraddec(vrad, base, buffer.length());
+    
 void run_file_open_example() {
     cout << "run_file_open_example..." << endl;
     fstream fio;
@@ -34,20 +44,22 @@ void run_file_open_example() {
         len = line.length();
 
         if (len > 0) {
-            std::string data_x;
-            std::string buffer_x = line.substr(0,3);
-            vmapencode(buffer_x, &data_x);
-            uint16_t vrad_wmi = vradenc(data_x, base);
+            std::string buffer;
+            line = line.substr(0, 3);
+            vmapencode(line, &buffer);
+            uint16_t vrad_wmi = vradenc(buffer, base);
 
             cout << "vwmi: 0x" << std::hex << vrad_wmi;
             cout << endl;
               
-        }
+        }        
         // cout << "line: " << line << " len: " << len << endl;   
     }
 
     file_close(&fio);
 }
+
+
 
 void run_simple() {
     int base = 33;
