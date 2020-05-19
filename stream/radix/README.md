@@ -1,9 +1,5 @@
 ### Radix
-
 Radix encoding strings to numbers
-
-### Strings
-
 
 ### Compiling example
 

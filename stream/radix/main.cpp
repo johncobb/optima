@@ -3,11 +3,13 @@
 #include <map>
 #include <fstream>
 #include <string>
+#include <boost/format.hpp>
 
 // #include "lib/vrad.h"
 #include "lib/lib_vrad.h"
 
 using namespace std;
+using namespace boost;
 
 void file_open(fstream* fio, string path) {
     (*fio).open(path);
@@ -27,6 +29,8 @@ void run_file_open_example() {
     int base = 33;
     
     file_open(&fio, "../../datasets/wmi_output");
+    cout << " wmi" << endl;
+    cout << "----" << endl;
 
     while(fio) {
         counter++;
@@ -38,9 +42,9 @@ void run_file_open_example() {
             std::string buffer;
             line = line.substr(0, 3);
             vmapencode(line, &buffer);
-            uint16_t vrad_wmi = vradenc(buffer, base);
+            uint16_t vrad_wmi = (uint16_t) vradenc(buffer, base);
 
-            cout << "vwmi: 0x" << std::hex << vrad_wmi;
+            cout << boost::format("%04X") % vrad_wmi;
             cout << endl;
               
         }        
@@ -75,24 +79,37 @@ void run_example_vin() {
 
     /* perform limited charset encoding */
     vmapencode(buffer.substr(0,3), &data_wmi);
-    rad_wmi = vradenc(data_wmi, base);
+    rad_wmi = (uint16_t) vradenc(data_wmi, base);
 
     vmapencode(buffer.substr(3,5), &data_vds);
-    rad_vds = vradenc(data_vds, base);      
+    rad_vds = (uint32_t) vradenc(data_vds, base);      
 
     vmapencode(buffer.substr(8,9), &data_ser);
-    rad_ser = vradenc(data_ser, base);      
+    rad_ser = (uint64_t) vradenc(data_ser, base);      
 
-    cout << "wmi: " << hex << rad_wmi << endl; 
-    cout << "vds: " << hex << rad_vds << endl;
-    cout << "ser: " << hex << rad_ser << endl;  
+    // cout << "wmi: 0x" << boost::format("%02X") % rad_wmi << endl; 
+    // cout << "vds: 0x" << boost::format("%02X") %  rad_vds << endl;
+    // cout << "ser: 0x" << boost::format("%02X") % rad_ser << endl; 
+
+    cout << " wmi      vds              ser" << endl;
+    cout << "---- -------- ----------------" << endl;
+    cout << boost::format("%04X") % rad_wmi << " ";
+    cout << boost::format("%08X") % rad_vds << " ";
+    cout << boost::format("%016X") % rad_ser;
+    cout << endl;
+
+    /* 
+     * header:  wmi      vds              ser
+     *         ---- -------- ----------------
+     * output: 5460 0171B286 000001D34C4071A8
+     */
 }
 
 int main() {
     // run_simple();
-    cout << "running main..." << endl;
-    // run_file_open_example();
-    run_example_vin();
+    cout << "running example(s)..." << endl;
+    run_file_open_example();
+    // run_example_vin();
     return 0;
 
 }
