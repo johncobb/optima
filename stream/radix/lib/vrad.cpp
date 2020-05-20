@@ -17,7 +17,6 @@ char vmapcharat(int index) {
 
 void vmapencode(std::string src, std::string* dest) {
     for (int i=0; i<src.length(); i++) {
-        // dest->push_back(vmapindexof(src[i]));
         dest->push_back(vmapindexof(toupper(src[i])));
     }
 }
@@ -44,13 +43,12 @@ uint64_t vradenc(std::string data, int base) {
         int mval = data[i];
         char mvalc = vmapcharat(mval);
 
-
         vrad += (mval * pow(base, exp)); // replace: bitshif
-
     }
 
     return vrad;
 }
+
 
 uint64_t vraddec(uint64_t vrad, int base, int len) {
     int exp = 0;
@@ -74,6 +72,35 @@ uint64_t vraddec(uint64_t vrad, int base, int len) {
             vdelta = vrad;
             vmapi = vrad;
         }
+    }
+
+    return vrad;
+}
+
+
+uint64_t vraddecx(uint64_t vrad, int base, int len, std::string* out) {
+    int exp = 0;
+    
+    for (int i=0; i<len; i++) {
+        int vmapi = 0;
+        uint64_t vdelta = 0;
+
+        exp = (len-1) -i;
+
+        uint64_t vradp = pow(base, exp);
+        uint64_t vmod = vrad % vradp; // replace: bitshif
+        
+        if (vmod > 0) {
+            vdelta = vrad - vmod;
+            vmapi = vdelta/vradp;
+
+            vrad = vmod;
+        }
+        else {
+            vdelta = vrad;
+            vmapi = vrad;
+        }
+        out->push_back(vmapcharat(vmapi));
     }
 
     return vrad;
