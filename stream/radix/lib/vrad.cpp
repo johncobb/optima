@@ -77,7 +77,6 @@ uint64_t vraddec(uint64_t vrad, int base, int len) {
     return vrad;
 }
 
-
 uint64_t vraddecx(uint64_t vrad, int base, int len, std::string* out) {
     int exp = 0;
     

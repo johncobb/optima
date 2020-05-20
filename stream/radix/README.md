@@ -1,6 +1,12 @@
 ### Radix
 Radix encoding strings to numbers
 
+### Dependencies
+Installing boost
+```console
+brew install boost
+```
+
 ### Compiling example
 
 ```console

@@ -91,15 +91,10 @@ void run_simple() {
 
 void decode_tuple(std::string data, std::string* out) {
 
-    uint16_t x = stoul(data.substr(0,4), 0, 16);
-    uint32_t y = stoul(data.substr(4, 8), 0, 16);
-    uint64_t z = stoull(data.substr(12, 16), 0, 16);
-    std::cout << x << std::endl;
-    std::cout << y << std::endl;
-    std::cout << z << std::endl;
-    vraddecx(x, 33, 3, out);
-    vraddecx(y, 33, 5, out);
-    vraddecx(z, 33, 9, out);    
+    // std::cout << "decoding data: " << data << std::endl;
+    uint64_t buffer = stoull(data, 0, 16);
+    
+    vraddecx(buffer, 33, data.length(), out);  
 }
 
 void run_example_vin() {
@@ -117,7 +112,7 @@ void run_example_vin() {
     std::string data_vds;
     std::string data_ser;    
 
-    std::cout << "value: " << buffer << std::endl;
+    std::cout << "encoding_value: " << buffer << std::endl;
 
     /* perform limited charset encoding */
     vmapencode(buffer.substr(0,3), &vrad.wmi.mapped);
@@ -129,28 +124,27 @@ void run_example_vin() {
     vmapencode(buffer.substr(8,9), &vrad.ser.mapped);
     vrad.ser.rad = (uint64_t) vradenc(vrad.ser.mapped, base); 
 
-    std::cout << "seg         val              rad" << std::endl;
-    std::cout << "----- --------- ----------------" << std::endl;
-    std::cout << "wmi   " << buffer.substr(0,3) << "                  " << vrad.wmi.rad << std::endl;    
-    std::cout << "vds   " << buffer.substr(3,5) << "             " << vrad.vds.rad << std::endl; 
-    std::cout << "ser   " << buffer.substr(8,9) << "    " << vrad.ser.rad << std::endl; 
-    std::cout << "--------------------------------" << std::endl << std::endl;
+    vrad.wmi.hex = str(boost::format("%X") % vrad.wmi.rad);
+    vrad.vds.hex = str(boost::format("%X") % vrad.vds.rad);
+    vrad.ser.hex = str(boost::format("%X") % vrad.ser.rad);    
 
-    vrad.wmi.hex = str(boost::format("%04X") % vrad.wmi.rad);
-    vrad.vds.hex = str(boost::format("%08X") % vrad.vds.rad);
-    vrad.ser.hex = str(boost::format("%016X") % vrad.ser.rad);
+    std::cout << "seg         val          base-10      base-16" << std::endl;
+    std::cout << "----- --------- ---------------- ------------" << std::endl;
+    std::cout << "wmi   " << buffer.substr(0,3) << "                  " << vrad.wmi.rad << "         " << vrad.wmi.hex << std::endl;    
+    std::cout << "vds   " << buffer.substr(3,5) << "             " << vrad.vds.rad << "      " << vrad.vds.hex << std::endl; 
+    std::cout << "ser   " << buffer.substr(8,9) << "    " << vrad.ser.rad << "  " << vrad.ser.hex << std::endl; 
+    std::cout << "---------------------------------------------" << std::endl << std::endl;    
     
-    std::cout << "wmi  vds      ser" << std::endl;
-    std::cout << "---- -------- ----------------" << std::endl;
-    std::cout << vrad.wmi.hex << " ";
-    std::cout << vrad.vds.hex << " ";
-    std::cout << vrad.ser.hex;
-    std::cout << std::endl << std::endl;  
+    std::string swmi = "";
+    std::string svds = "";
+    std::string sser = "";
+    
+    std::cout << "decoding_tuples: " << vrad.wmi.hex << " " << vrad.vds.hex << " " << vrad.ser.hex << std::endl;
+    decode_tuple(vrad.wmi.hex, &swmi);
+    decode_tuple(vrad.vds.hex, &svds);
+    decode_tuple(vrad.ser.hex, &sser);
 
-    // vrad.result.val = vrad.wmi.hex + vrad.vds.hex + vrad.ser.hex;
-    // std::string buffer_out = "";
-    // decode_tuple(vrad.result.val, &buffer_out);
-    // std::cout << "data: " << buffer_out << std::endl;
+    std::cout << "decoding_result: " << swmi << svds << sser << std::endl << std::endl;
 
     /* 
      * header:  wmi      vds              ser
