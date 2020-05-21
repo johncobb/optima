@@ -52,5 +52,11 @@ vmapencode(buffer.substr(0,3), &buffer);
 uint16_t vrad_wmi = (uint16_t) vradenc(buffer, base);
 ```
 
+### Tips
+Before processing the file example it is helpful to determine how many lines are in the file. The treminal command below will return the number of lines in the file.
+```console
+wc -l  ../../datasets/output
+```
+
 #### References:
 https://www.cprogramming.com/tutorial/shared-libraries-linux-gcc.html
