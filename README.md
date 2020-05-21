@@ -14,7 +14,7 @@ stream-opt 35,250 bytes
 ```
 
 Model:
- * sets[[set-id, name]]
+ * sets[[set-id, name][filter, total]]
  * meta[dataset-id, [meta-name, [field-id, ...], ['field-value', '...']]]
  * frame[dataset-id, [field-value, ...]]
  * dict[dataset-id, meta-name, [field-name, ...]]
@@ -82,16 +82,14 @@ Example radix base 10:
             [0, ["class", [1, 2, 3, 4, 5], ["New", "Used", "Loaner", "Uber", "Lyft"]]],
             [1, ["auth", [1, 2, 3], ["@porscia.evans", "@jane.smith", "@peter.parker"]]]            
         ],
+        "dict": [
+            [0, "inv", ["org-id", "dealer-id", "mileage", "created-epoch", "last-label-epoch", "inventory-id", "vin", "year", "make-id", "model-id", "stock", "color-id", "class-id", "location-id", "lat", "lng", "sig", "3pa", "scanned-epoch"]]
+            [1, "auth", ["user-id", "email", "first", "last", "last-login-epoch"]]
+        ],         
         "frame": [         
             [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "WP1AA2A50KLB01949", 2019, 1, 1, "KLB01949", 3, 2, 1, 32768011, -106374481, 5.7, 0, 325452232]],
-            [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "SBM14DCA8JW001553", 2018, 2, 2, "JW001553", 3, 2, 2, 28768011, -105352845, 5.2, 0, 325452185]]                                                                                                                                                               
-        ],
-        "dict": [
-            {
-                "id": 0,
-                "name": "inv",
-                "val": ["org-id", "dealer-id", "mileage", "created-epoch", "last-label-epoch", "inventory-id", "vin", "year", "make-id", "model-id", "stock", "color-id", "class-id", "location-id", "lat", "lng", "sig", "3pa", "scanned-epoch"]            
-            }         
+            [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "SBM14DCA8JW001553", 2018, 2, 2, "JW001553", 3, 2, 2, 28768011, -105352845, 5.2, 0, 325452185]],
+            [1, [1, "@porscia-evans", "porscia@vinpoint.io", "Porscia", "Evans", 325452187]]
         ]
     }
 }

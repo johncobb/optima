@@ -1,6 +1,15 @@
-# Testing dataset sizes.
+# Optimizing datasets
 
-### Compress/Decompress Gzip
+## Using the python script to compress/decompress
+```console
+# compress
+python3 gz.py -i tmp
+
+# decompress
+python3 gz.py -i tmp.gz -o d
+```
+
+## Using Gzip to to compress/decompress
 
 ```console
 gzip [OPTION]... [FILE]...
