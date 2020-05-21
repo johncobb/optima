@@ -30,6 +30,8 @@ Our goal is to radix encode the vehicle identification number to a 14 byte radix
 
 The encoding method converts the vin from the ASCII base set to base 33. The valid characters of a vin are 0-9...A-Z excluding I, O, and Q. This gives us 33 base characters to work with. Cutting down from the original ASCII set also prevents the radix from winding up to exceptionaly large numbers which can overflow the desired data type.
 ```c++
+std::string vmap = "0123456789ABCDEFGHJKLMNPRSTUVWXYZ";
+
 void vmapencode(std::string src, std::string* dest) {
     for (int i=0; i<src.length(); i++) {
         dest->push_back(vmapindexof(toupper(src[i])));
