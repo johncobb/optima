@@ -1,9 +1,10 @@
 
 # Optimizing JSON stream for web and mobile endpoints.
  * sets - defines datasets included in meta/frame/dict
+ * dict - data dictionary hosting dataset index and field order used to assemble query results 
  * meta - descriptor defining fuzzy lookup for use with omni suggest/search functionality 
  * frame - omni search initial load/query results hosting datasets
- * dict - data dictionary hosting dataset index and field order used to assemble query results
+
 
 Metrics:
 ```console
@@ -15,9 +16,10 @@ stream-opt 35,250 bytes
 
 Model:
  * sets[[set-id, name][filter, total]]
+ * dict[dataset-id, meta-name, [field-name, ...]] 
  * meta[dataset-id, [meta-name, [field-id, ...], ['field-value', '...']]]
  * frame[dataset-id, [field-value, ...]]
- * dict[dataset-id, meta-name, [field-name, ...]]
+
 
 Notes: 
  * VIN and stock are distinct listings of the current inventory. Stock meta is only populated if the dealership uses something other than the last 6/8 characters of the VIN.
@@ -72,6 +74,10 @@ Example radix base 10:
 {
     "data": {
         "sets": [[0, "inv"], [1, "auth"]],
+        "dict": [
+            [0, "inv", ["org-id", "dealer-id", "mileage", "created-epoch", "last-label-epoch", "inventory-id", "vin", "year", "make-id", "model-id", "stock", "color-id", "class-id", "location-id", "lat", "lng", "sig", "3pa", "scanned-epoch"]]
+            [1, "auth", ["user-id", "email", "first", "last", "last-login-epoch"]]
+        ],             
         "meta": [
             [0, ["org", [1, 2], [ "Cobb Porsche", "Cobb McLaren"]]],
             [0, ["dealership", [100, 200], ["Cobb Porsche", "Cobb McLaren"]]],
@@ -81,11 +87,7 @@ Example radix base 10:
             [0, ["color", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], ["White", "Silver", "Grey", "Black", "Yellow", "Orange", "Tan", "Brown", "Purple", "Red", "Blue", "Green"]]],
             [0, ["class", [1, 2, 3, 4, 5], ["New", "Used", "Loaner", "Uber", "Lyft"]]],
             [1, ["auth", [1, 2, 3], ["@porscia.evans", "@jane.smith", "@peter.parker"]]]            
-        ],
-        "dict": [
-            [0, "inv", ["org-id", "dealer-id", "mileage", "created-epoch", "last-label-epoch", "inventory-id", "vin", "year", "make-id", "model-id", "stock", "color-id", "class-id", "location-id", "lat", "lng", "sig", "3pa", "scanned-epoch"]]
-            [1, "auth", ["user-id", "email", "first", "last", "last-login-epoch"]]
-        ],         
+        ],    
         "frame": [         
             [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "WP1AA2A50KLB01949", 2019, 1, 1, "KLB01949", 3, 2, 1, 32768011, -106374481, 5.7, 0, 325452232]],
             [0, [1, 100, 558853, 0, 325452225, 325452232, 317919, "SBM14DCA8JW001553", 2018, 2, 2, "JW001553", 3, 2, 2, 28768011, -105352845, 5.2, 0, 325452185]],

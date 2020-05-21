@@ -1,12 +1,12 @@
 {
     "data": {
         "sets": [0, "iot", [10, 10]],
-        "meta": [
-            [0, ["iot", [1, 2, 3], ["John Cobb", "Cameron Parus", "Dunny Dan"]]]        
-        ],
         "dict": [
             [0, "iot", ["id", "Name", "lat", "lng", "epoch", "device-type"]]
-        ],        
+        ],          
+        "meta": [
+            [0, ["iot", [1, 2, 3], ["John Cobb", "Cameron Parus", "Dunny Dan"]]]        
+        ],      
         "frame": [         
             [0, [1, "John Cobb", 32768011, -106374481, 325452185, "iOS"]],
             [0, [2, "Cameron Parus", 32768011, -106374481, 325452185, "Android"]]                                                                                                                                                          
