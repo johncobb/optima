@@ -40,36 +40,7 @@ Use Case:
 * API returns data in framed format including meta/frame/dict.
 * javascript assembles framed data using dict to map fields to appropriate field elements in browser.
 
-## SQL Data Model
-### Table - vrad
-Table vrad stores radix encoding of vehicle identification number. Optimizing storage of vin in a multi-column composite index for faster lookups.
-Traditional querys on varchar fields require costly full table scans. We should see several orders of magnitued improvement on performance. 
-
-| field  | data-type | size |
-| ------ | --------- | ----:|
-| inventory-id | uint32_t | 4 |
-| vrad-wmi | uint16_t  | 2 |
-| vrad-vds | uint32_t | 4 |
-| vrad-ser | uint64_t | 8 |
-
-#### Index
-CREATE INDEX vrad_wmi_vds_ser_index ON vrad (vrad-wmi, vrad-vds, vrad-ser);
-
-
-#### Efficiency
-| performance | size/bytes |
-| ------ | ----:|
-| O(log_2(n)) | 14 |
-
-
-Example radix base 10:
-```console
-843 = 8 x 10^2 + 4 x 10^1 + 3 x 10^0
-```
-
-
 ### Example JSON Format
-
 ```json
 {
     "data": {
