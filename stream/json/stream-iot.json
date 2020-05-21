@@ -5,11 +5,13 @@
             [0, "iot", ["id", "Name", "lat", "lng", "epoch", "device-type"]]
         ],          
         "meta": [
-            [0, ["iot", [1, 2, 3], ["John Cobb", "Cameron Parus", "Dunny Dan"]]]        
+            [0, ["iot", [1, 2, 3, 4], ["John Cobb", "Cameron Parus", "Dunny Dan", "Printer 1"]]]        
         ],      
         "frame": [         
             [0, [1, "John Cobb", 32768011, -106374481, 325452185, "iOS"]],
-            [0, [2, "Cameron Parus", 32768011, -106374481, 325452185, "Android"]]                                                                                                                                                          
+            [0, [2, "Cameron Parus", 32768011, -106374481, 325452185, "iOS"]],
+            [0, [3, "Dunny Dan", 32768011, -106374481, 325452185, "iOS"]],
+            [0, [4, "Printer 1", 32768011, -106374481, 325452185, "ibr-200"]]                                                                                                                                                                
         ]
     }
 }
