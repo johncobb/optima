@@ -63,7 +63,62 @@ void file_open(fstream* fio, string path) {
 void file_close(fstream* fio) {
     (*fio).close();
 }
-    
+
+void benchmark_load_file(std::vector<std::string>* list) {
+    fstream fio;
+    std::string line;
+    size_t len;
+    int base = 33;
+    std::cout << "open file..." << std::endl;
+    // file_open(&fio, "../../datasets/output");
+    {
+        Timer timer;
+        file_open(&fio, "../../datasets/archives/vin_dataset_5m");        
+    }
+    std::cout << "load contents..." << std::endl;    
+    {
+        Timer timer;
+
+        while(fio) {
+            
+            getline(fio, line);        
+            len = line.length();
+
+            if (len > 0) {
+                list->push_back(line);
+            }
+        }
+    }
+    std::cout << "iterate records..." << std::endl;    
+    {
+        Timer timer;
+
+        for(std::string& s: *list) {
+            
+        }
+    }
+
+    std::cout << "encode records..." << std::endl;    
+    {
+        Timer timer;
+
+        for(std::string& s: *list) {
+            vrad_t vrad;
+
+            vmapencode(line.substr(0, 3), &vrad.wmi.mapped);
+            vrad.wmi.rad = (uint16_t) vradenc(vrad.wmi.mapped, base);
+
+            vmapencode(line.substr(3,5), &vrad.vds.mapped);
+            vrad.vds.rad = (uint32_t) vradenc(vrad.vds.mapped, base);      
+
+            vmapencode(line.substr(8,9), &vrad.ser.mapped);
+            vrad.ser.rad = (uint64_t) vradenc(vrad.ser.mapped, base);              
+        }
+    }    
+
+   
+}
+
 void run_file_open_example() {
     std::cout << "run_file_open_example..." << std::endl;
     fstream fio;
@@ -72,10 +127,11 @@ void run_file_open_example() {
     size_t len = 0;
     int base = 33;
     
-    // file_open(&fio, "../../datasets/output");
-    file_open(&fio, "../../datasets/archives/vin_max");
+    file_open(&fio, "../../datasets/output");
+
     std::cout << " wmi" << std::endl;
     std::cout << "----" << std::endl;
+    
 
 {
     Timer timer;
@@ -188,6 +244,10 @@ void run_simple() {
 }
 
 int main() {
+
+    std::vector<std::string> list;
+    benchmark_load_file(&list);
+    return 0;
     // run_simple();
     std::cout << "running example(s)..." << std::endl;
     run_file_open_example();
