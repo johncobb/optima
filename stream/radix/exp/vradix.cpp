@@ -330,7 +330,7 @@ void run_example_substr(string data) {
 }
 
 int main() {
-    run_file_open_example();
+    // run_file_open_example();
     // return 0;
     // run_example_checksum("JTHKD5BH0D2170008");
     // run_example_map();
@@ -338,7 +338,7 @@ int main() {
     // return 0;
     
     // run_example_encdec_base10();
-    // run_example_encdec_base33("JTH");
+    run_example_encdec_base33("JTH");
     // run_example_substr("JTHKD5BH0D2170008");
     // run_example_vencode();
     // run_file();

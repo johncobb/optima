@@ -11,44 +11,94 @@ struct vrad {
 };
 
 struct Node {
-    int count;
     uint64_t data;
-    int pos;
-    struct Node* child;
+    Node** keys;
+
+    Node* left;
+    Node* right;
+    Node* leaf;
 };
 
 struct Node* new_node(uint64_t data) {
     Node* node = (Node*) malloc(sizeof(Node));
     node->data = data;
-    node->child = NULL;
-}
-
-Node* search(Node* node, vrad* data) {
-
-    if (data->data.empty()) {
-        return NULL;
-    }
-    /* 
-     * recursive first item will be top
-     * all subsequent will be children.
-     */
-    node = new_node(data->data.top());
-    data->data.pop();
-
-    node->child = searchnode(node, data);
+    node->left = NULL;
+    node->right = NULL;
 
     return node;
 }
 
-Node* searchnode(Node* node, vrad* data) {
-    if (data->data.empty()) {
-        return NULL;
+Node* search(Node* node, uint64_t data) {
+    if (node == NULL)
+        return new_node(data);
+
+    if (node->data == data) {
+        return node;
     }
 
-    if (node->data < data->data.top()) {
+    if (data > node->data)
+        return search(node->right, data);
 
-    }
+    if (data < node->data)
+        return search(node->leaf, data);
+
 }
+
+Node* build_tree(Node* node, vrad* data) {
+    if (data->data.empty()) {
+        return node;
+    }
+
+    Node* root = search(NULL, data->data.top());
+    data->data.pop();
+
+    Node* node = search(root, data->data.top());
+    data->data.pop();
+
+}
+
+
+
+// struct Node {
+//     int count;
+//     uint64_t data;
+//     int pos;
+//     struct Node* child;
+// };
+
+
+// struct Node* new_node(uint64_t data) {
+//     Node* node = (Node*) malloc(sizeof(Node));
+//     node->data = data;
+//     node->child = NULL;
+// }
+
+// Node* search(Node* node, vrad* data) {
+
+//     if (data->data.empty()) {
+//         return NULL;
+//     }
+//     /* 
+//      * recursive first item will be top
+//      * all subsequent will be children.
+//      */
+//     // node = new_node(data->data.top());
+//     data->data.pop();
+
+//     node->child = searchnode(node, data);
+
+//     return node;
+// }
+
+// Node* searchnode(Node* node, vrad* data) {
+//     if (data->data.empty()) {
+//         return NULL;
+//     }
+
+//     if (node->data < data->data.top()) {
+
+//     }
+// }
 
 
 // Node* build_tree(uint64_t data) {
@@ -79,6 +129,6 @@ int main() {
 
 
     // Node* root = build_tree(rad_wmi);
-    Node* root = search(NULL, &x);
+    // Node* root = search(NULL, &x);
 }
 

@@ -50,6 +50,26 @@ Decompressing keep compressed file:
 gzip -dk filename.gz
 ```
 
+### Decompressing file to a named pipe.
+This allows us to write the file directly to memory avoiding temporary files.
+
+```console
+mkfifo fifo
+```
+
+```console
+buffer -i fifo -o async_file -u 100000 -t &
+```
+
+```console
+gzip --stdout -c -d vin_dataset_master.gz > fifo
+```
+
+```console
+cat fifo
+```
+
+
 
 #### References:
 https://linuxize.com/post/gzip-command-in-linux/
