@@ -12,13 +12,16 @@ var FuzzySearch = require('fuzzy-search');
 
 const file_makes_json = '../../datasets/json/standard_makes_kvp.json';
 const file_models_json = '../../datasets/json/standard_models_kvp.json';
+const file_colors_json = '../../datasets/json/standard_colors_kvp.json';
 
 const makesJson = JSON.parse(fs.readFileSync(file_makes_json, 'utf8'));
 const modelsJson = JSON.parse(fs.readFileSync(file_models_json, 'utf8'));
+const colorsJson = JSON.parse(fs.readFileSync(file_colors_json, 'utf8'));
 // var searchRoutes = require("./routes/search");
 
 console.log(makesJson);
 console.log(modelsJson);
+console.log(colorsJson);
 
 function escapeRegex(string) {
     return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -60,14 +63,6 @@ app.get("/search", function(req, res) {
     }
 });
 
-
-
-// // about page 
-// app.get('/about', function(req, res) {
-//     res.render('pages/about');
-// });
-
-// app.use("/", searchRoutes);
 
 app.listen(8080);
 console.log('8080 is the magic port');
