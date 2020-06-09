@@ -96,3 +96,6 @@ Example radix base 10:
     }
 }
 ```
+
+### Example API
+Under the apps section there is an example of a node server using express to return records from the example database.

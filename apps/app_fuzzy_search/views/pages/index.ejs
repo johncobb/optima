@@ -1,0 +1,49 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+<header>
+    <% include ../partials/header %>
+</header>
+
+<main>
+    <div class="jumbotron">
+        <h1>Fuzzy-Search</h1>
+        <p>Confidence is key.</p>
+
+        <div class="container">
+            <p>
+                <form action="/search" method="GET" class="form-inline">
+                    <div class="form-group">
+                        <input type="text" name="search" placeholder="Omni search..." class="form-control" >
+                        <input type="submit" value="Search" class="btn btn-default">
+                    </div>
+                </form>
+            </p>
+        </div>
+
+        <div class="container">
+            <p>
+                <h2>Loop</h2>
+                <ul>
+                        <% fresult.forEach(function(make) { %>
+                            <li><%= make.key %> - <%= make.val %></li>
+                        <% }); %>
+                </ul>
+            </p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+
+</body>
+</html>
