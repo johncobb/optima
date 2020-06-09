@@ -51,6 +51,10 @@ const modelSearch = new FuzzySearch(modelsJson, ['val'], {
     caseSensitive: false,
 });
 
+const colorSearch = new FuzzySearch(modelsJson, ['val'], {
+    caseSensitive: false,
+});
+
 app.get("/search", function(req, res) {
     if(req.query.search) {
         // const regex = new RegExp(escapeRegex(req.query.search), 'gi');
