@@ -1,16 +1,23 @@
+require('dotenv').config({path: __dirname + '/.env'});
 let mysql2 = require('mysql2');
 const fs = require('fs');
 const lookupMeta = require('./lookup.js');
 
+
 function appExpress() {
 
+    
     const express = require('express');
     const app = express();
 
+    const db_name = process.env['DATABASE_NAME'];
+    const db_userid = process.env['DATABASE_USERID'];
+    const db_password = process.env['DATABASE_PASSWORD'];
+
     let configPool = {
-        host: 'db-free.cds7f5aucfsr.us-east-2.rds.amazonaws.com',
-        user: 'admin',
-        password: 'mckenzie',
+        host: db_name,
+        user: db_userid,
+        password: db_password,
         database: 'mydb',
         waitForConnections: true,
         connectionLimit: 15,
