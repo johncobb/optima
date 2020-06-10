@@ -47,6 +47,7 @@ void vmapdecode(string data) {
 /* http://eecs.wsu.edu/~ee314/handouts/numsys.pdf */
 /* https://www.cs.colostate.edu/~cs270/.Spring12/Notes/NumberSystems */
 uint64_t vradenc(string data, int base) {
+    uint64_t lograd = 0;
     uint64_t vrad = 0;
     uint64_t vradshxp = 0; /* used to track bitshift exponent */
     int exp = 0;
@@ -64,13 +65,14 @@ uint64_t vradenc(string data, int base) {
         int mval = data[i];
         char mvalc = vmapcharat(mval);
 
-
+        lograd = (mval * pow(base, exp));
         vrad += (mval * pow(base, exp)); // replace: bitshif
 
         cout << "[" << i << "]";
         cout << "[" << mval << "]";     
         cout << "[" << mvalc << "]";   
-        cout << base << "^" << exp << "=" << vrad << endl;
+        // cout << base << "^" << exp << "=" << vrad << endl;
+        cout << base << "^" << exp << "=" << lograd << endl;
     }
 
     return vrad;
@@ -338,9 +340,9 @@ int main() {
     // return 0;
     
     // run_example_encdec_base10();
-    run_example_encdec_base33("JTH");
+    // run_example_encdec_base33("JTH");
     // run_example_substr("JTHKD5BH0D2170008");
-    // run_example_vencode();
+    run_example_vencode();
     // run_file();
 
     return 0;
