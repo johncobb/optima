@@ -1,24 +1,21 @@
 require('dotenv').config({path: __dirname + '/.env'});
 let mysql2 = require('mysql2');
-const fs = require('fs');
-const lookupMeta = require('./lookup.js');
-
 
 function appExpress() {
 
-    
     const express = require('express');
     const app = express();
-
-    const db_name = process.env['DATABASE_NAME'];
-    const db_userid = process.env['DATABASE_USERID'];
-    const db_password = process.env['DATABASE_PASSWORD'];
+    const db_host = process.env.MYSQL_HOST
+    const db_name = process.env.MYQL_NAME
+    const db_userid = process.env.MYSQL_USER;
+    const db_password = process.env.MYSQL_PASSWORD;
+    
 
     let configPool = {
-        host: db_name,
+        host: db_host,
         user: db_userid,
         password: db_password,
-        database: 'mydb',
+        database: db_name,
         waitForConnections: true,
         connectionLimit: 15,
         queueLimit: 0
@@ -33,7 +30,8 @@ function appExpress() {
 
         const inventoryId = req.params.id;
         const queryString = 'select * from inventory where id = ?';
-        
+        var objs = [];
+
         pool.query(queryString, [inventoryId], (error, rows, fields) => {
             if (error) {
                 res.sendStatus(500);
@@ -43,51 +41,31 @@ function appExpress() {
             }
         
             if (rows.length > 0) {
-                var objs = lookupMeta.getLookupMeta();
+                
 
                 console.log("rows: " + rows.length + " fields: " + fields.length);
 
                 rows.forEach(function(row) {
-                    objs.data.frame.push([row.id, row.vin, row.year, row.make_id, row.model_id, row.color_id, row.lat, row.lng]);
+                    objs.push([row.id, row.vin, row.year, row.make_id, row.model_id, row.color_id, row.lat, row.lng]);
                 });
-
-                res.json(objs); 
-
+                
             } else {
                 console.log('query returned zero results');
             }
-        });        
-    });
+        });  
 
+        res.sendStatus(200);
 
-    app.get('/', (req, res) => {
-        res.send('Hello Nic Bander.');
     });
     
-    app.listen(3000, () => {
-        console.log('app express running http://localhost:3000\n');
+    app.get('/', (req, res) => {
+        res.send('Greetings Professor Falken.');
+    });
+    
+    app.listen(8080, () => {
+        console.log('app express running http://localhost:8080\n');
     });    
 }
 
-function appHttp() {
-    var http = require('http');
-
-    var app = http.createServer(function(req, res) {
-        res.setHeader('Content-Type', 'application/json');
-        var objs = lookupMeta.getLookupMeta();
-    
-        res.end(JSON.stringify(objs, null, 3));
-    
-    });
-    
-    app.listen(3000, () => {
-        console.log('app http running http://localhost:3000\n');
-    });
-}
-
-// appHttp();
 appExpress();
 
-/* async await
- * promises
- */
