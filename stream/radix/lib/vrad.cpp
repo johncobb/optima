@@ -41,7 +41,6 @@ uint64_t vradenc(std::string data, int base) {
 
         /* get the index of the character at i(th) position */
         int mval = data[i];
-        char mvalc = vmapcharat(mval);
 
         vrad += (mval * pow(base, exp)); // replace: bitshif
     }

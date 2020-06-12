@@ -245,13 +245,11 @@ void run_simple() {
 
 int main() {
 
+    run_example_vin();
+    return 0;
+
     std::vector<std::string> list;
     benchmark_load_file(&list);
-    return 0;
-    // run_simple();
-    std::cout << "running example(s)..." << std::endl;
-    run_file_open_example();
-    // run_example_vin();
     return 0;
 
 }

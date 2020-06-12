@@ -29,12 +29,13 @@
 
         <div class="container">
             <p>
-                <h2>Loop</h2>
-                <ul>
-                        <% fresult.forEach(function(make) { %>
-                            <li><%= make.key %> - <%= make.val %></li>
-                        <% }); %>
-                </ul>
+                    <h2>Makes</h2>
+                    <ul>
+                            <% makeResults.forEach(function(make) { %>
+                                <li><%= make.id %> - <%= make.make %></li>
+                            <% }); %>
+                    </ul>
+         
             </p>
         </div>
     </div>
