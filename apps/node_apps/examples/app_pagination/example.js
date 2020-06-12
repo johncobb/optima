@@ -1,5 +1,11 @@
 // server.js
 // load the things we need
+/*
+ * References:
+ * Youtube: https://www.youtube.com/watch?v=ZX3qt0UWifc
+ * Title: Create A Paginated API With Node.js - Complete Tutorial
+ * WDS
+ */
 
 var express = require('express');
 var app = express();
