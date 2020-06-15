@@ -14,6 +14,19 @@ frame_json_id = []
 frame_json_val = []
 meta_json = []
 
+def pandas_build(file1, filter=None):
+
+    # load csv file1
+    frame_one = pandas.read_csv(file1, sep='\t', header=None, names=['vin', 'make'], usecols=['vin', 'make'])
+    footer()
+    
+    # sort ascending first by make then by vin
+    frame_one.sort_values(by=['vin'], ascending=True)
+
+    
+    #export_frame(frame_one, filter)
+    filter_frame(frame_one, filter)
+
 def build_makes_kvp_json(file1):
     frame = pandas.read_csv(file1, sep=',', header=None, names=['id', 'make'], usecols=['id', 'make'], skiprows=[1])
     frame.sort_values(by=['id'], ascending=True)
